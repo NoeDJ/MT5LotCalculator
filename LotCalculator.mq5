@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
-//|                                                      ProjectName |
-//|                                      Copyright 2020, CompanyName |
-//|                                       http://www.companyname.net |
+//|                                                 MT5LotCalculator |
+//|                                   Copyright 2022, PnT Investment |
+//|                                             n.pranyoto@gmail.com |
 //+------------------------------------------------------------------+
 
 
