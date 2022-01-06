@@ -121,18 +121,22 @@ int OnCalculate(const int rates_total,
 //double PipValue = ((((SymbolInfoDouble(Symbol(), SYMBOL_TRADE_TICK_VALUE))*point)/(SymbolInfoDouble(Symbol(),SYMBOL_TRADE_TICK_SIZE))) * LotSize);
 
    Pips = NormalizeDouble(Pips,2);
-   double PipValue = (((SymbolInfoDouble(Symbol(), SYMBOL_TRADE_TICK_VALUE))*point)/(SymbolInfoDouble(Symbol(),SYMBOL_TRADE_TICK_SIZE)));
-//Print(PipValue);
-   double lots = ((Risk/100) * freeMargin) / Pips;
-   double lotsTwo = ((RiskTwo/100) * freeMargin) / Pips;
-   double lotsThree = ((RiskThree/100) * freeMargin) / Pips;
+   double PipValue = (((SymbolInfoDouble(Symbol(), SYMBOL_TRADE_TICK_VALUE))*(point))/(SymbolInfoDouble(Symbol(),SYMBOL_TRADE_TICK_SIZE)));
+   double dCValueOne = (Risk/100) * freeMargin;
+   double dCValueTwo = (RiskTwo/100) * freeMargin;
+   double dCValueThree = (RiskThree/100) * freeMargin;
+   double lots = dCValueOne/(PipValue*Pips);
+   double lotsTwo = dCValueTwo/(PipValue*Pips);
+   double lotsThree = dCValueThree/(PipValue*Pips);
 
 // Truncate lot quantity to 2 decimal digits without rounding it
-   lots = floor(lots * 100) / 100;
+   //lots = floor(lots * 100) / 100;
+   //lotsTwo = floor(lotsTwo * 100) / 100;
+   //lotsThree = floor(lotsThree * 100) / 100;
 
    CommentString+="\n" + "Your free margin: "+ DepositCurrency + " " + DoubleToString(freeMargin, 2) + "\n";
    CommentString+="Risk Point : "+ (string)Pips + " points\n";
-   //CommentString+="Risk selected: " + DepositCurrency + " " + DoubleToString(Risk * freeMargin, 2) + "\n";
+//CommentString+="Risk selected: " + DepositCurrency + " " + DoubleToString(Risk * freeMargin, 2) + "\n";
 //CommentString+="Value of one pip trading 1 lot of " + Symbol() + ": " + DepositCurrency + " " + DoubleToString(PipValue, 3) + "\n";
    CommentString+="--------------------------------------------------------------------------\n";
    CommentString+="Risk 1: " + DoubleToString(Risk, 2) + "%" + " or "+ DepositCurrency + " " + DoubleToString((Risk/100) * freeMargin, 2) + " || Max lots : " + DoubleToString(lots, 2) + " lot\n";
@@ -232,23 +236,8 @@ void OnChartEvent(const int id,const long &lparam,const double &dparam,const str
          //Print(a[TotalArray-=1]);
          price1 = StringToDouble(a[0]);
          price2 = StringToDouble(a[TotalArray-=1]);
-         double digitkali = _Digits;
-         double digitkalix = 100000;
-         if(digitkali == 2)
-           {
-            digitkalix = 100;
-           }
-         else
-            if(digitkali == 3)
-              {
-               digitkalix = 1000;
-              }
-         //else if(digitkali == 5)
-         //{
-         //digitkalix = 1000;
-         //}
-         Pips = (price1 - price2) * digitkalix;
-         //Pips2 = (price1 - price2);
+         double ppoint = _Point;
+         Pips = (price1 - price2) / ppoint;
          if(Pips == 0)
            {
             Pips = 10000;
@@ -257,12 +246,8 @@ void OnChartEvent(const int id,const long &lparam,const double &dparam,const str
            {
             Pips *= -1;
            }
-         //Print(_Digits);
-         Print(Pips);
-         //Print(Pips2);
-         //datetime dt1 = b[0];
-         //datetime dt2 = b[TotalArray-=1];
-         //ObjectCreate(0, "Rectangle", OBJ_RECTANGLE, 0, dt1, price1, dt2, price2);
+         //Print(PipValuexx*Pips);
+         //Print("pips = " + Pips + " PipValuexx = " + PipValuexx);
          NewSize = 0;
          ArrayResize(a,0);
          ArrayResize(b,0);
